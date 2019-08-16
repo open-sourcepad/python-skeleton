@@ -1,25 +1,20 @@
 from flask import jsonify
+from conf.config import METHOD_DEFAULTS
 
 class Base(object):
-    ROUTES = []
 
-    def setter(self, **kwargs):
-        for method in self._methods():
-            if method in kwargs.keys():
-                self.ROUTES += [
-                    { 'url': kwargs[method]['url'], 'function': method, 'name': kwargs[method]['name'], 'kwargs': {'methods':[method.upper()]} },
-                ]
-
-    def get(self, **kwargs):
+    def show(self, **kwargs):
+        if 'id' not in kwargs.keys():
+            return self.on_error(response={'message': 'missing ID'})
         return self.on(kwargs['response'], 200)
 
-    def post(self, **kwargs):
+    def index(self, **kwargs):
         return self.on(kwargs['response'], 200)
 
-    def patch(self, **kwargs):
+    def create(self, **kwargs):
         return self.on(kwargs['response'], 200)
 
-    def put(self, **kwargs):
+    def update(self, **kwargs):
         return self.on(kwargs['response'], 200)
 
     def delete(self, **kwargs):
@@ -43,5 +38,11 @@ class Base(object):
     def json_response(self, dictionary):
         return jsonify(dictionary)
 
-    def _methods(self):
-        return ['get', 'post', 'put', 'delete', 'patch']
+    def _rests(self):
+        return [
+            { 'methods': ['GET'], 'function': 'index' },
+            { 'methods': ['GET'], 'function': 'show' },
+            { 'methods': ['POST'], 'function': 'create' },
+            { 'methods': ['PUT', 'PATCH'], 'function': 'update' },
+            { 'methods': ['DELETE'], 'function': 'delete' },
+        ]

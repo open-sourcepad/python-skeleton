@@ -3,17 +3,16 @@ allowed_origins=http://localhost:8000,http://127.0.0.1:8000
 allowed_headers=Content-Type
 allowed_methods=GET,PUT,POST,DELETE,OPTIONS
 
-[postgres]
+[database]
+type=mysql
 host=localhost
-database=python_skeleton
-user=postgres
-password=postgres
+db_name=aptonomy_development
+username=root
+password=root
+port=8889
 
 [logging]
 level=DEBUG
-
-[database]
-echo=yes
 
 [app_settings]
 environment=localhost

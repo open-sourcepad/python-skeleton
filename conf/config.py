@@ -13,3 +13,20 @@ CONFIG = configparser.ConfigParser()
 CONFIG.read(INI_FILE)
 
 APP_SETTINGS = CONFIG['app_settings']
+DATABASE = CONFIG['database']
+DB_CONN_STRING = "{type}://{username}:{password}@{host}:{port}/{db_name}".format(
+    type=DATABASE['type'],
+    username=DATABASE['username'],
+    password=DATABASE['password'],
+    host=DATABASE['host'],
+    port=DATABASE['port'],
+    db_name=DATABASE['db_name'],
+)
+
+METHOD_DEFAULTS = {
+    'index': { 'methods': ['GET'] },
+    'show': { 'methods': ['GET'] },
+    'create': { 'methods': ['POST'] },
+    'update': { 'methods': ['PUT', 'PATCH'] },
+    'delete': { 'methods': ['DELETE'] },
+}
