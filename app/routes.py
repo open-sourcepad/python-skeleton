@@ -1,42 +1,58 @@
-from app.api.home import Home
+from flask import request, session
+
+import sqlalchemy
+from conf.database import db_session
+
+from app.api import Home
+from app.model import User
+from app.service import JwtService as JWT
 from conf.config import METHOD_DEFAULTS
+from conf.config import METHOD_DEFAULTS
+
 class Routes:
+    VIEWS = [
+        Home,
+    ]
 
     def __init__(self, instance):
         self.instance = instance
-        self.classes = self._cls()
 
     def add_routes(self):
-        for cls in self.classes:
-            cls_instance = cls()
-            for route in cls.ROUTES:
-                attr = getattr(cls_instance, route['function'], None)
-                if attr:
-                    checker = self._checker(route['function'])
-                    options = { 'methods': ['GET'] }
-                    if checker:
-                        options = checker
+        for view in self.VIEWS:
+            view_instance = view()
+            for route in view.ROUTES:
+                func = getattr(view_instance, route['function'], None)
+                if func:
+                    route_keys = route.keys()
 
-                    if 'kwargs' in route.keys():
+                    if 'kwargs' in route_keys:
                         options = route['kwargs']
+                    else:
+                        options = METHOD_DEFAULTS.get( route['function'], {'methods': ['GET']} )
+
+                    if 'skip_auth' not in route_keys:
+                        func = self.auth_handler(func)
 
                     self.instance.add_url_rule(
                         route['url'],
-                        route['name'],
-                        attr,
+                        f"{route['url']}#{route['function']}",
+                        func,
                         **options
                     )
 
-    def _checker(self, function):
-        if function in self._defaults().keys():
-            return self._defaults()[function]
+    def auth_handler(self, func):
+        def new_func():
+            token = request.headers.get('Authorization', '').replace('Bearer ', '')
+            if token:
+                auth = JWT(data=token).decode()
+                if auth.get('id') and auth.get('email'):
+                    user = User.query.filter(
+                        User.id    == auth['id'],
+                        User.email == auth['email']
+                    ).one_or_none()
+                    if user:
+                        session['user'] = user.to_dict_except(keys={'encrypted_password'})
+                        return func()
+            return {'error': 'Unauthorized'}, 401
+        return new_func
 
-        return False
-
-    def _defaults(self):
-        return METHOD_DEFAULTS
-
-    def _cls(self):
-        return [
-            Home
-        ]

@@ -5,10 +5,33 @@ BaseDeclaration = declarative_base()
 BaseDeclaration.query = db_session.query_property()
 
 def init_db():
-    from user import User
     Base.metadata.create_all(bind=engine)
 
 class BaseModel:
+
+    def refresh(self):
+        db_session.refresh(self)
+
+    def save(self):
+        db_session.add(self)
+        self._commit()
+        self.refresh()
+
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        return self.save()
+
+    def delete(self):
+        db_session.delete(self)
+        self._commit()
+
+    def _commit(self):
+        try:
+            db_session.commit()
+        except Exception as e:
+            db_session.rollback()
+            raise e
 
     def to_dict(self, **kwargs):
         serializable = False
