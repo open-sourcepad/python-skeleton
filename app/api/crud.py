@@ -1,50 +1,39 @@
 from flask import request
-import simplejson as json
 import app.models
+from .base import Base
 
-class Crud:
-    ROUTES = [
-        { 'url': '/posts', 'function': 'index'  },
-        { 'url': '/posts', 'function': 'create' },
-        { 'url': '/posts/<id>', 'function': 'show' },
-        { 'url': '/posts/<id>', 'function': 'update' },
-        { 'url': '/posts/<id>', 'function': 'delete' }
-        ]
+class Crud(Base):
 
     def index(self, **kwargs):
         return self._to_json(self._collection())
 
     def create(self, **kwargs):
-        obj = self.RESOURCE(**request.get_json())
+        obj = self._resource()(**request.get_json())
         obj.save()
         if obj.id is None:
             return {'error': 'Something went wrong'}, 422
         return self._to_json(obj), 201
 
     def show(self, **kwargs):
-        obj = self.RESOURCE.query.get(kwargs['id'])
+        obj = self._get_obj()
         return self._to_json(obj)
 
     def update(self, **kwargs):
-        obj = self._resource().query.get(kwargs['id'])
+        obj = self._get_obj()
         obj.update(**request.get_json())
         return self._to_json(obj)
 
     def delete(self, **kwargs):
-        obj = self._resource().query.get(kwargs['id'])
+        obj = self._get_obj()
         obj.delete()
         return {}, 204
 
+
+    def _get_obj(self):
+        return self._resource().query.get_or_404(kwargs['id'])
+
     def _collection(self):
         return self._resource().query.all()
-
-    def _to_json(self, data):
-        to_dump = data
-        if type(data) is list:
-            to_dump = [x.to_dict() for x in data]
-        elif hasattr(data, 'to_dict'):
-            to_dump = data.to_dict()
-        return json.dumps(to_dump, use_decimal=True, default=str)
 
     def _resource(self):
         if not hasattr(self, 'RESOURCE'):
