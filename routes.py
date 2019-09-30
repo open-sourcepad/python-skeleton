@@ -22,7 +22,7 @@ class Routes:
     def init_app(cls, app):
         for view in cls.VIEWS:
             view_instance = view()
-            for route in view.ROUTES:
+            for route in view_instance._routes():
                 func = getattr(view_instance, route['function'], None)
                 if func:
                     methods = route.get('methods') or cls.METHOD_DEFAULTS.get(route['function'], ['GET'])

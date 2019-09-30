@@ -5,7 +5,17 @@ from .base import Base
 class Crud(Base):
 
     def index(self, **kwargs):
-        return self._to_json(self._collection())
+        page = request.args.get('page', 1)
+        per_page = request.args.get('per_page', 50)
+
+        records = self._resource().query
+        if request.args.get('order_by'):
+            records = self._sort(records)
+
+        data = records.paginate(int(page), int(per_page), False)
+        meta = {'total_count': data.total}
+
+        return self._to_json({'data': data.items, 'meta': meta})
 
     def create(self, **kwargs):
         obj = self._resource()(**request.get_json())
@@ -15,21 +25,21 @@ class Crud(Base):
         return self._to_json(obj), 201
 
     def show(self, **kwargs):
-        obj = self._get_obj()
+        obj = self._get_obj(**kwargs)
         return self._to_json(obj)
 
     def update(self, **kwargs):
-        obj = self._get_obj()
+        obj = self._get_obj(**kwargs)
         obj.update(**request.get_json())
         return self._to_json(obj)
 
     def delete(self, **kwargs):
-        obj = self._get_obj()
+        obj = self._get_obj(**kwargs)
         obj.delete()
         return {}, 204
 
 
-    def _get_obj(self):
+    def _get_obj(self, **kwargs):
         return self._resource().query.get_or_404(kwargs['id'])
 
     def _collection(self):
@@ -42,30 +52,28 @@ class Crud(Base):
             setattr(self, 'RESOURCE', model)
         return getattr(self, 'RESOURCE')
 
-    # def _paginate(self, data, params):
-        # data.__class__ = BaseQuery
+    def _routes(self):
+        if hasattr(self, 'ROUTES'):
+            return getattr(self, 'ROUTES')
+        else:
+            resource_name = self.__module__.split('.')[-1]
+            return [
+                { 'url': f'/{resource_name}', 'function': 'index' },
+                { 'url': f'/{resource_name}', 'function': 'create' },
+                { 'url': f'/{resource_name}/<id>', 'function': 'show' },
+                { 'url': f'/{resource_name}/<id>', 'function': 'update' },
+                { 'url': f'/{resource_name}/<id>', 'function': 'delete' }]
 
-        # page, per_page = params.get('page', 1), params.get('per_page', 50)
-        # pagination = data.paginate(int(page), int(per_page), False)
+    def _sort(self, data):
+        order_by = request.args.get('order_by')
+        order_column = getattr(self._resource(), order_by)
 
-        # return pagination.items, pagination
+        if order_column is None:
+            return data
 
-    # def _sort(self, data, params, mapping):
-        # order_by = params.get('order_by')
-        # order_column = mapping.get(order_by)
+        if request.args.get('order', 'ASC').lower() == 'asc':
+            data = data.order_by( order_column.asc() )
+        else:
+            data = data.order_by( order_column.desc() )
 
-        # if order_column is None:
-            # return data
-
-        # if type(order_column) is str:
-            # if params.get('order', 'ASC').lower() == 'asc':
-                # data = data.order_by( text(f'{order_column} ASC') )
-            # else:
-                # data = data.order_by( text(f'{order_column} DESC') )
-        # else:
-            # if params.get('order', 'ASC').lower() == 'asc':
-                # data = data.order_by( order_column.asc() )
-            # else:
-                # data = data.order_by( order_column.desc() )
-
-        # return data
+        return data
