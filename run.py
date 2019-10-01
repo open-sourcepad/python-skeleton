@@ -6,7 +6,7 @@ from app import app, db
 from routes import Routes
 
 Migrate().init_app(app, db)
-Routes.init_app(app)
+Routes().init_app(app)
 
 app.logger.setLevel(logging.DEBUG)
 

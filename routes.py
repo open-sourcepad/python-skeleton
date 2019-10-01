@@ -18,18 +18,17 @@ class Routes:
         'update': ['PUT', 'PATCH'],
         'delete': ['DELETE'] }
 
-    @classmethod
-    def init_app(cls, app):
-        for view in cls.VIEWS:
+    def init_app(self, app):
+        for view in self.VIEWS:
             view_instance = view()
             for route in view_instance._routes():
                 func = getattr(view_instance, route['function'], None)
                 if func:
-                    methods = route.get('methods') or cls.METHOD_DEFAULTS.get(route['function'], ['GET'])
+                    methods = route.get('methods') or self.METHOD_DEFAULTS.get(route['function'], ['GET'])
 
                     if 'skip_auth' not in route:
-                        func = cls.auth_handler(func)
-                    func = cls.db_error_handler(func)
+                        func = self.auth_handler(func)
+                    func = self.db_error_handler(func)
 
                     app.add_url_rule(
                         route['url'],
@@ -37,8 +36,7 @@ class Routes:
                         func,
                         methods=methods)
 
-    @classmethod
-    def auth_handler(cls, func):
+    def auth_handler(self, func):
         def new_func(**kwargs):
             token = request.headers.get('Authorization', '').replace('Bearer ', '')
             if token:
@@ -49,8 +47,7 @@ class Routes:
             return {'error': 'Unauthorized'}, 401
         return new_func
 
-    @classmethod
-    def db_error_handler(cls, func):
+    def db_error_handler(self, func):
         def new_func(**kwargs):
             try:
                 return func(**kwargs)
