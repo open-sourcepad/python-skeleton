@@ -2,7 +2,7 @@ from app.api import BaseApi
 
 class Home(BaseApi):
     ROUTES = [
-        { 'url': '/home', 'function': 'index', 'name': 'home' },
+        { 'url': '/home', 'function': 'index', 'name': 'home', 'skip_auth': True },
         { 'url': '/home/create', 'function': 'create', 'name': 'home/create' },
         { 'url': '/home/hello', 'function': 'hello', 'name': 'home/hello' },
         { 'url': '/home/hi', 'function': 'hi', 'name': 'home/hi', 'kwargs': {'methods':['GET']} },

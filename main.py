@@ -9,7 +9,6 @@ app.secret_key = APP_SETTINGS.get('secret_key', 'S0MEr4nd0mK3Y')
 
 CORS(app)
 DBMiddleware()
-Routes(app).add_routes()
 
 @app.errorhandler(405)
 def method_not_allowed(e):
