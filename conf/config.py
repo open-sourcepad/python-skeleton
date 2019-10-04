@@ -23,6 +23,16 @@ DB_CONN_STRING = "{type}://{username}:{password}@{host}:{port}/{db_name}".format
     db_name=DATABASE['db_name'],
 )
 
+DATABASE_TEST = CONFIG['database_test']
+DB_TEST_CONN_STRING = "{type}://{username}:{password}@{host}:{port}/{db_name}".format(
+    type=DATABASE_TEST['type'],
+    username=DATABASE_TEST['username'],
+    password=DATABASE_TEST['password'],
+    host=DATABASE_TEST['host'],
+    port=DATABASE_TEST['port'],
+    db_name=DATABASE_TEST['db_name'],
+)
+
 METHOD_DEFAULTS = {
     'index': { 'methods': ['GET'] },
     'show': { 'methods': ['GET'] },

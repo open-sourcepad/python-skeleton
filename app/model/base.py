@@ -56,3 +56,12 @@ class BaseModel:
                 dict[k] = str(dict[k])
 
         return dict
+
+    def save(self):
+        try:
+            db_session.add(self)
+            # db_session.commit()
+            # self.refresh()
+        except Exception as e:
+            db_session.rollback()
+            raise e

@@ -16,4 +16,11 @@ def method_not_allowed(e):
     return {'error': 'Method is not allowed for the requested URL.'}, 405
 
 if __name__ == '__main__':
-    app.run()
+    # app.wsgi_app = DBMiddleware(app.wsgi_app)
+    Routes(app).add_routes()
+    if APP_SETTINGS['environment'] == 'production':
+        from wsgiref import simple_server
+        httpd = simple_server.make_server('127.0.0.1', 5000, app)
+        httpd.serve_forever()
+    else:
+        app.run(debug=True)
