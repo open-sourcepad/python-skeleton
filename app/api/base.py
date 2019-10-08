@@ -14,14 +14,10 @@ class Base:
             result = {}
             for key, val in data.items():
                 result[key] = self._deep_to_dict(val)
-        elif type(data) is list:
+        elif type(data) in (list, set, tuple):
             result = []
             for val in data:
                 result.append(self._deep_to_dict(val))
-        elif type(data) is set:
-            result = set()
-            for val in data:
-                result.add(self._deep_to_dict(val))
 
         return result
 
