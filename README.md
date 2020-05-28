@@ -10,3 +10,10 @@ cp .env.sample .env
 flask db upgrade
 flask run
 ```
+
+List routes
+```
+python3 routes.py
+python3 routes.py <search term>
+e.g. python3 routes.py login
+```
