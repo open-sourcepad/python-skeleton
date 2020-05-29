@@ -1,0 +1,10 @@
+default: &default
+  config: '<path/to/config>'
+  hostname: <config hostname>
+  username: <config username>
+
+staging:
+  <<: *default
+
+production:
+  <<: *default
