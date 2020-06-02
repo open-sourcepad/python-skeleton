@@ -1,12 +1,22 @@
 Python3 CRUD template
 ===============================
 
- Install `python3`, `pip`, `virtualenv`
+ Install `python3`, `pip`, `pipenv`
 ```
-virtualenv venv
-source venv/bin/activate
-pip install -r requirements.txt
+pipenv --python 3
+pipenv install -d
 cp .env.sample .env
+```
+
+Run / Migrate app as pipenv
+```
+pipenv run flask db upgrade
+pipenv run flask run
+```
+
+Run / Migrate app in virtual environment
+```
+source `pipenv --venv`/bin/activate
 flask db upgrade
 flask run
 ```
