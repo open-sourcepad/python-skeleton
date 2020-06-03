@@ -65,8 +65,8 @@ class DeploymentProcedure:
         if self.error:
             return False
 
-        self._copy_procedure(f".env.{self.env}", copy, '.env')
-        self._copy_procedure(f"supervisord.conf.{self.env}", copy, 'supervisord.conf')
+        self._copy_procedure(f"deploy/.env.{self.env}", copy, '.env')
+        self._copy_procedure(f"deploy/supervisord.conf.{self.env}", copy, 'supervisord.conf')
 
     def _loop_through(self, list_data, protocol=copy):
         for value in list_data:

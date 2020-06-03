@@ -17,17 +17,17 @@ class Deploy:
         dp = DeploymentProcedure(env=self.env, package_name=self.package_name)
         dp.run()
 
-        if not dp.error:
-            client = self._connect()
-            client.exec_command(f"mkdir {self.env}")
-
-
-            ftp = client.open_sftp()
-            ftp.put(f"{self._root_url}/package.tar.gz", f"/home/aptonomy/{self.env}/package.tar.gz")
-
-            self._command_execution(client, ['/home/aptonomy/.local/bin/pipenv --rm'], cd=f"{self.env}/current")
-            self._command_execution(client, self._setup_commands, cd=self.env)
-            self._command_execution(client, self._deploy_commands, cd=f"{self.env}/current")
+        # if not dp.error:
+        #     client = self._connect()
+        #     client.exec_command(f"mkdir {self.env}")
+        #
+        #
+        #     ftp = client.open_sftp()
+        #     ftp.put(f"{self._root_url}/package.tar.gz", f"/home/aptonomy/{self.env}/package.tar.gz")
+        #
+        #     self._command_execution(client, ['/home/aptonomy/.local/bin/pipenv --rm'], cd=f"{self.env}/current")
+        #     self._command_execution(client, self._setup_commands, cd=self.env)
+        #     self._command_execution(client, self._deploy_commands, cd=f"{self.env}/current")
 
     def _command_execution(self, client, cmds, cd):
         for cmd in cmds:
