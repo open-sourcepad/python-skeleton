@@ -7,8 +7,12 @@ class UsersApi(Base):
     ROUTES = [
         { 'url': '/register', 'function': 'register', 'methods': ['POST'], 'skip_auth': True },
         { 'url': '/login', 'function': 'login', 'methods': ['POST'], 'skip_auth': True },
+        { 'url': '/test', 'function': 'test', 'methods': ['GET'], 'skip_auth': True },
         ]
 
+
+    def test(self, **kwargs):
+        return self._to_json({})
 
     def register(self, **kwargs):
         params = request.get_json()
