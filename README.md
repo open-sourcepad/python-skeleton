@@ -49,7 +49,7 @@ Same folder/project name is not allowed and will return an error message
 This is to avoid unneccessarily overwriting existing projects
 ```
 
-Deployment
+Deployment usage
 ```
 pipenv run dyao_deploy <environment>
 
