@@ -12,8 +12,8 @@ class User(Base, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
     encrypted_password = db.Column(db.String)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    # created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    # updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     posts = db.relationship('Post', lazy='select', backref=db.backref('author', lazy='select'))
 

@@ -23,9 +23,9 @@ class Deploy:
 
 
             ftp = client.open_sftp()
-            ftp.put(f"{self._root_url}/package.tar.gz", f"/home/aptonomy/{self.env}/package.tar.gz")
+            ftp.put(f"{self._root_url}/package.tar.gz", f"/home/{self.options["username"]}/{self.env}/package.tar.gz")
 
-            self._command_execution(client, ['/home/aptonomy/.local/bin/pipenv --rm'], cd=f"{self.env}/current")
+            self._command_execution(client, [f"/home/{self.options["username"]}/.local/bin/pipenv --rm"], cd=f"{self.env}/current")
             self._command_execution(client, self._setup_commands, cd=self.env)
             self._command_execution(client, self._deploy_commands, cd=f"{self.env}/current")
 
@@ -60,13 +60,13 @@ class Deploy:
     @property
     def _deploy_commands(self):
         return [
-            "/home/aptonomy/.local/bin/pipenv install",
-            "/home/aptonomy/.local/bin/pipenv update",
-            # f"pipenv run flask db upgrade",
-            "kill -9 `pgrep -f supervisord`",
-            "/home/aptonomy/.local/bin/pipenv run supervisord",
-            "/home/aptonomy/.local/bin/pipenv run supervisorctl stop all",
-            "/home/aptonomy/.local/bin/pipenv run supervisorctl start all",
+            f"/home/{self.options["username"]}/.local/bin/pipenv install",
+            f"/home/{self.options["username"]}/.local/bin/pipenv update",
+            f"/home/{self.options["username"]}/.local/bin/pipenv run flask db upgrade",
+            f"kill -9 `pgrep -f supervisord`",
+            f"/home/{self.options["username"]}/.local/bin/pipenv run supervisord",
+            f"/home/{self.options["username"]}/.local/bin/pipenv run supervisorctl stop all",
+            f"/home/{self.options["username"]}/.local/bin/pipenv run supervisorctl start all",
         ]
 
     @property

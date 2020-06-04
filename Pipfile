@@ -7,6 +7,7 @@ verify_ssl = true
 "pry.py" = "==0.1.1"
 ipython = "==7.14.0"
 pytest = "==5.4.3"
+pytest-flask = "==1.0.0"
 
 [packages]
 alembic = "==1.1.0"
@@ -14,6 +15,8 @@ python-dotenv = "==0.13.0"
 click = "==7.0"
 gunicorn = "==20.0.4"
 itsdangerous = "==1.1.0"
+mysqlclient = "==1.4.6"
+mysql-connector-python = "==8.0.11"
 psycopg2 = "==2.8.3"
 pysftp = "==0.2.9"
 python-dateutil = "==2.8.0"

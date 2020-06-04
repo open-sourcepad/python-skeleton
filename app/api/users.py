@@ -12,7 +12,7 @@ class UsersApi(Base):
 
 
     def test(self, **kwargs):
-        return self._to_json({})
+        return self._to_json(request.get_json())
 
     def register(self, **kwargs):
         params = request.get_json()
