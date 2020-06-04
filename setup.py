@@ -8,8 +8,7 @@ setup(
     description = "Python Skeleton",
     entry_points={
         'console_scripts': [
-            'dyao=install:run',
-            'dyao_deploy=deploy_run:run'
+            'dyao=setup_protocol:run'
         ]
     }
 )

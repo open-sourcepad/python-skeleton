@@ -4,14 +4,14 @@ from shutil import copytree, ignore_patterns
 from distutils.dir_util import copy_tree
 
 class Install:
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.command = 'new'
         self.project_name = None
-        self.args = sys.argv
+        self.args = args
 
-        if len(sys.argv) == 3:
-            self.command = sys.argv[1]
-            self.project_name = sys.argv[2]
+        if len(self.args) == 3:
+            self.command = self.args[1]
+            self.project_name = self.args[2]
 
 
     def run(self):
@@ -62,5 +62,5 @@ class Install:
         return Path(url).parent
 
 
-def run():
-    Install().run()
+def run(*args):
+    Install(*args).run()

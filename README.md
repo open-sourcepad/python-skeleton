@@ -51,8 +51,5 @@ This is to avoid unneccessarily overwriting existing projects
 
 Deployment instructions
 ```
-pipenv run dyao_deploy <environment>
-
-if that doesn't work
-pipenv run python3 deploy_run.py <environment>
+dyao deploy <environment>
 ```

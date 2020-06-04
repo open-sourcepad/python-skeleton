@@ -10,6 +10,7 @@ class DeploymentProcedure:
         self.error = False
 
     def run(self):
+        print(self._root_url)
         self._create_package_folder()
         self._copy_files()
 
@@ -133,5 +134,5 @@ class DeploymentProcedure:
 
     @property
     def _root_url(self):
-        url = os.path.abspath(os.path.dirname(__file__))
-        return Path(url).parent
+        url = f"{os.popen('pwd').read()}".replace('\n', '')
+        return Path(url)

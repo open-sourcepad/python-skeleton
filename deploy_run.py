@@ -1,9 +1,20 @@
-import paramiko, os, sys, time
+import paramiko, os, sys, time, yaml
 
 from datetime import datetime as DT
 from pathlib import Path
-from app.libs.yml_reader import YamlReader
 from deploy.deployment_procedure import DeploymentProcedure
+
+# copied from yaml reader to avoid app __init__.py dependency of flask
+class YamlReader:
+    def __init__(self, **kwargs):
+        self.file = kwargs.get('file')
+
+    def read(self):
+        with open(self.file) as stream:
+            try:
+                return yaml.safe_load(stream)
+            except Exception as e:
+                return {}
 
 class Deploy:
     def __init__(self, *args, **kwargs):
@@ -97,5 +108,5 @@ class Deploy:
         return config
 
 
-def run():
-    Deploy(environment=sys.argv[1]).run()
+def run(*arg):
+    Deploy(environment=arg[2]).run()
