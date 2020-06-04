@@ -106,5 +106,7 @@ venv.bak/
 config.ini
 logs/
 deploy/config.yml
-supervisord*
+supervisord.conf
+supervisord.conf.staging
+supervisord.conf.production
 package*

@@ -11,23 +11,22 @@ class Deploy:
         self.package_name = 'package'
         print('deploying %s' %(env))
         self.options = YamlReader(file='deploy/config.yml').read()[env]
-        self.run()
 
     def run(self):
         dp = DeploymentProcedure(env=self.env, package_name=self.package_name)
         dp.run()
 
-        if not dp.error:
-            client = self._connect()
-            client.exec_command(f"mkdir {self.env}")
-
-
-            ftp = client.open_sftp()
-            ftp.put(f"{self._root_url}/package.tar.gz", f"/home/{self.options["username"]}/{self.env}/package.tar.gz")
-
-            self._command_execution(client, [f"/home/{self.options["username"]}/.local/bin/pipenv --rm"], cd=f"{self.env}/current")
-            self._command_execution(client, self._setup_commands, cd=self.env)
-            self._command_execution(client, self._deploy_commands, cd=f"{self.env}/current")
+        # if not dp.error:
+        #     client = self._connect()
+        #     client.exec_command(f"mkdir {self.env}")
+        #
+        #
+        #     ftp = client.open_sftp()
+        #     ftp.put(f"{self._root_url}/package.tar.gz", f"/home/{self.options['username']}/{self.env}/package.tar.gz")
+        #
+        #     self._command_execution(client, [f"/home/{self.options['username']}/.local/bin/pipenv --rm"], cd=f"{self.env}/current")
+        #     self._command_execution(client, self._setup_commands, cd=self.env)
+        #     self._command_execution(client, self._deploy_commands, cd=f"{self.env}/current")
 
     def _command_execution(self, client, cmds, cd):
         for cmd in cmds:
@@ -60,13 +59,13 @@ class Deploy:
     @property
     def _deploy_commands(self):
         return [
-            f"/home/{self.options["username"]}/.local/bin/pipenv install",
-            f"/home/{self.options["username"]}/.local/bin/pipenv update",
-            f"/home/{self.options["username"]}/.local/bin/pipenv run flask db upgrade",
+            f"/home/{self.options['username']}/.local/bin/pipenv install",
+            f"/home/{self.options['username']}/.local/bin/pipenv update",
+            f"/home/{self.options['username']}/.local/bin/pipenv run flask db upgrade",
             f"kill -9 `pgrep -f supervisord`",
-            f"/home/{self.options["username"]}/.local/bin/pipenv run supervisord",
-            f"/home/{self.options["username"]}/.local/bin/pipenv run supervisorctl stop all",
-            f"/home/{self.options["username"]}/.local/bin/pipenv run supervisorctl start all",
+            f"/home/{self.options['username']}/.local/bin/pipenv run supervisord",
+            f"/home/{self.options['username']}/.local/bin/pipenv run supervisorctl stop all",
+            f"/home/{self.options['username']}/.local/bin/pipenv run supervisorctl start all",
         ]
 
     @property
@@ -84,7 +83,7 @@ class Deploy:
         return ssh_config
 
     def _config(self):
-        config = {'hostname': self.options['hostname'], 'username': self.options["username"]}
+        config = {'hostname': self.options['hostname'], 'username': self.options['username']}
         ssh_config = self._ssh_config()
 
         user_config = ssh_config.lookup(config['hostname'])
@@ -98,5 +97,5 @@ class Deploy:
         return config
 
 
-if __name__ == '__main__':
-    Deploy(environment=sys.argv[1])
+def run():
+    Deploy(environment=sys.argv[1]).run()

@@ -108,7 +108,20 @@ class DeploymentProcedure:
                 if os.path.exists(to_path):
                     rmtree(to_path)
 
-            kwargs = {} if protocol == copy else {'ignore':ignore_patterns('__pycache__', '*.pyc')}
+            kwargs = {}
+
+            if protocol == copytree:
+                kwargs = dict(ignore=ignore_patterns(
+                    '__pycache__',
+                    '.pytest_cache',
+                    '*.pyc',
+                    'setup.py',
+                    '.gitignore',
+                    'install.py',
+                    '.git',
+                    '*.egg-info',
+                    'package*',
+                ))
 
             protocol(from_path, to_path, **kwargs)
             print(f"Done: {path}")
