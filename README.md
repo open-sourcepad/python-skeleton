@@ -51,8 +51,8 @@ This is to avoid unneccessarily overwriting existing projects
 
 Deployment
 ```
-> pipenv run dyao_deploy <environment>
+pipenv run dyao_deploy <environment>
 
 if that doesn't work
-> pipenv run python3 deploy_run.py <environment>
+pipenv run python3 deploy_run.py <environment>
 ```
