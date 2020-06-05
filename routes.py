@@ -3,12 +3,9 @@ import re
 
 from app import db
 from app.api import *
-from app.models import User
 
 class Routes:
     VIEWS = [
-        PostsApi,
-        UsersApi,
     ]
 
     METHOD_DEFAULTS = {
@@ -23,13 +20,13 @@ class Routes:
         import sys
         filter = None if len(sys.argv) < 2 else sys.argv[1]
         just = 15
-        print(f" {'Class'.ljust(just)} {'Function'.ljust(just)} \t {'URL'.ljust(just)} \t Methods \t Skip Auth")
+        print(f" {'Function'.ljust(just)} \t {'URL'.ljust(just)} \t Methods \t Skip Auth")
         print("--------------------------------------------------------------------------------------------------")
         for view in self.VIEWS:
             results = getattr(view, 'ROUTES', [])
             for result in results:
                 if filter is None or filter in str(result) or filter in view.__name__.lower():
-                    print(f" {view.__name__} \t {result['function'].ljust(just)} \t {result['url'].ljust(just)} \t {result['methods']} \t {result['skip_auth']}")
+                    print(f" {view.__name__}#{result['function'].ljust(10)} \t {result['url'].ljust(just)} \t {result['methods']} \t {result['skip_auth']}")
 
 
 
