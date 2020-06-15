@@ -53,3 +53,13 @@ Deployment instructions
 ```
 dyao deploy <environment>
 ```
+
+Running local server
+```
+dyao <s | serve | server | run>
+
+> for options, refer to flask run --help
+> i.e.
+> dyao s --help
+> dyao s -p 5000 -h 0.0.0.0
+```

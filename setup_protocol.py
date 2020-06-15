@@ -14,3 +14,6 @@ def run():
             finder = sys.argv[2]
 
         os.system(f"pipenv run python3 routes.py {finder}")
+    elif input in ['run', 'serve', 'server', 's']:
+        options = ' '.join(sys.argv[2:])
+        os.system(f"pipenv run flask run {options}")

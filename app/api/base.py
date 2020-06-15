@@ -1,6 +1,48 @@
 import simplejson as json
+from flask import request
 
 class Base:
+
+    @property
+    def params(self):
+        params = {}
+        params = dict(request.args)
+
+        if params == {}:
+            for f in [
+                'params_json',
+                'params_data'
+            ]:
+                attr = getattr(self, f, None)
+                if attr:
+                    params = attr
+
+                    if params != {}: break
+
+        return params
+
+    @property
+    def raw_params(self):
+        return request
+
+    @property
+    def params_json(self):
+        json_data = getattr(request, 'get_json', None)
+        params = {}
+        if json_data != {}: params = json_data()
+
+        return params
+
+    @property
+    def params_data(self):
+        data = getattr(request, 'get_data', None)
+        new_data = None
+        params = {}
+
+        if data != {}: new_data = data()
+        if new_data is not None: params = json.loads(new_data.decode('utf8'))
+
+        return params
 
     def _to_json(self, data):
         return json.dumps(self._deep_to_dict(data), use_decimal=True, default=str)
